@@ -1,0 +1,26 @@
+- hosts: aws
+  become: true
+
+  tasks:
+    - name: Install pip
+      package:
+        name: pip
+        state: present
+    
+    - name: Install AWS dependencies
+      pip:
+        name:
+          - boto3
+          - botocore
+
+    - name: List all EC2 keys in the current region
+      amazon.aws.ec2_key_info:
+        AWS_ACCESS_KEY_ID: YOUR_ACCESS_KEY
+        region: us-east-1
+        AWS_SECRET_ACCESS_KEY: YOUR_SECRET_KEY
+        AWS_SESSION_TOKEN: YOUR_SESSION_TOKEN
+      register: ec2_keys
+    
+    - name: Show EC2 Keys
+      debug:
+        msg: "{{ ec2_keys }}"
